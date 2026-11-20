@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/* Color tokens: light by default, dark when the system asks for it. */
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --text: #17171a;
+  --muted: #5d5d66;
+  --line: #e2e0da;
+  --accent: #c2410c;
+  --accent-soft: #fbe7dc;
+  --chip: #efede8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0f12;
+    --surface: #16181d;
+    --text: #ececef;
+    --muted: #9a9aa6;
+    --line: #262932;
+    --accent: #fb923c;
+    --accent-soft: #2a1a10;
+    --chip: #1f2229;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-chip: var(--chip);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(-10%, -10%) scale(1); }
+  50% { transform: translate(15%, 10%) scale(1.15); }
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Hero entrance: each item gets its delay through --d. */
+.enter {
+  opacity: 0;
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Scroll reveal: only hides content once JS is running, so the page still works without it. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0ms);
+}
+.reveal-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero backdrop: faint grid plus a drifting accent glow. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  top: 10%;
+  right: 5%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 65%);
+  opacity: 0.18;
+  filter: blur(40px);
+  animation: drift 14s ease-in-out infinite;
+}
+
+/* Rotating glow ring behind the portrait. */
+/* Animated border: a spinning conic gradient clipped to a 2px frame around the portrait. */
+.photo-glow {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 2px;
+  border-radius: 1.1rem;
+  box-shadow: 0 20px 60px -20px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.photo-glow::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  background: conic-gradient(from 0deg, var(--accent), transparent 25%, transparent 60%, var(--accent));
+  animation: spin-slow 6s linear infinite;
+}
+.photo-glow img {
+  display: block;
+  border-radius: calc(1.1rem - 2px);
+}
+
+.lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, box-shadow 0.3s;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px -12px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.cursor::after {
+  content: "_";
+  margin-left: 2px;
+  color: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter,
+  .reveal-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+  .hero-bg::after,
+  .photo-glow::before,
+  .cursor::after {
+    animation: none;
+  }
+  .lift:hover {
+    transform: none;
+  }
+}
