@@ -22,7 +22,12 @@ type N = {
 };
 type L = { a: number; b: number; len: number; k: number };
 
-export type BrainTech = { label: string; projects: string[] };
+export type BrainTech = {
+  label: string;
+  projects: string[];
+  about?: string;
+  uses?: { project: string; text: string }[];
+};
 
 const NOTE_KINDS = ["Spec", "ADR", "Session log", "Requirement", "Guide", "Meeting notes", "Decision"];
 
@@ -91,6 +96,16 @@ export default function BrainGraph({
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const [hint, setHint] = useState<string | null>(null);
+  const [openTech, setOpenTech] = useState<{ tech: BrainTech; x: number; y: number; above: boolean } | null>(null);
+  const openTechRef = useRef(setOpenTech);
+  const names = new Map(projects.map((p) => [p.slug, p.name.replace(/ \(.*\)$/, "")]));
+
+  useEffect(() => {
+    if (!openTech) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpenTech(null);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [openTech]);
 
   useEffect(() => {
     const el = canvas.current!;
@@ -289,14 +304,16 @@ export default function BrainGraph({
       }
       hover = pick(x, y);
       const n = hover >= 0 ? nodes[hover] : null;
-      el.style.cursor = n?.href ? "pointer" : n ? "grab" : "default";
+      el.style.cursor = n?.href || n?.kind === "tech" ? "pointer" : n ? "grab" : "default";
       setHint(
         n
           ? n.kind === "project"
             ? `${n.label} — click to see it on screen`
             : n.kind === "hub"
               ? "The project brain — click to open the kit on GitHub"
-              : n.label
+              : n.kind === "tech"
+                ? `${n.label} — click to see how it's used`
+                : n.label
           : null,
       );
     };
@@ -316,9 +333,24 @@ export default function BrainGraph({
         if (n.href) {
           if (n.href.startsWith("http")) window.open(n.href, "_blank", "noopener");
           else window.location.href = n.href;
+        } else if (n.kind === "tech") {
+          const t = techs.find((x) => `t-${x.label}` === n.id);
+          if (t) {
+            const p = toScreen(n);
+            const tipW = Math.min(300, w - 16);
+            openTechRef.current({
+              tech: t,
+              x: Math.min(Math.max(p.x - tipW / 2, 8), w - tipW - 8),
+              y: p.y,
+              above: p.y > h / 2,
+            });
+          }
         } else {
           hover = i;
+          openTechRef.current(null);
         }
+      } else if (i < 0 && !mouse.moved) {
+        openTechRef.current(null);
       }
       try {
         el.releasePointerCapture(e.pointerId);
@@ -373,8 +405,42 @@ export default function BrainGraph({
           </span>
         </div>
         <p className="pointer-events-none absolute bottom-3 left-4 right-4 text-sm text-white/80">
-          {hint ?? "Hover a node to explore · click a project to see it on screen · drag to play"}
+          {hint ?? "Hover a node to explore · click a project or a technology · drag to play"}
         </p>
+
+        {openTech && (
+          <div
+            role="tooltip"
+            className="absolute z-10 w-[min(300px,calc(100%-16px))] rounded-lg border border-white/15 bg-[#26262b]/95 p-3 text-white shadow-xl backdrop-blur"
+            style={{
+              left: openTech.x,
+              ...(openTech.above ? { bottom: `calc(100% - ${openTech.y - 14}px)` } : { top: openTech.y + 14 }),
+            }}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-sm font-semibold">{openTech.tech.label}</p>
+              <button
+                type="button"
+                onClick={() => setOpenTech(null)}
+                className="-mr-1 -mt-1 rounded px-1.5 text-white/60 hover:bg-white/10 hover:text-white"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            {openTech.tech.about && <p className="mt-0.5 text-xs text-white/60">{openTech.tech.about}</p>}
+            <ul className="mt-2 max-h-48 space-y-2 overflow-y-auto pr-1">
+              {(openTech.tech.uses ?? openTech.tech.projects.map((p) => ({ project: p, text: "" }))).map((u) => (
+                <li key={u.project} className="text-xs leading-snug text-white/80">
+                  <a href={`/work#${u.project}`} className="font-semibold text-accent hover:underline">
+                    {names.get(u.project) ?? u.project}
+                  </a>
+                  {u.text && <span>: {u.text}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <figcaption className="border-t border-line bg-surface px-5 py-3 text-sm text-muted">{caption}</figcaption>
     </figure>

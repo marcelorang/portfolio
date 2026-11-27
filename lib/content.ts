@@ -1,4 +1,5 @@
 // All site copy lives here. Edit this file to update the portfolio; components only render it.
+import { techUsage } from "./techUsage";
 
 export const profile = {
   name: "Marcelo Rangel",
@@ -282,24 +283,7 @@ export const brainGraph = {
   src: "/projects/brain/01-project-brain-graph.webp",
   caption:
     "Modeled on my real project brain in Obsidian (771 notes, 3,500+ links): every project is a hub of specs, ADRs and session logs, and shared technologies tie them together.",
-  techs: [
-    { label: ".NET / C#", projects: ["naja", "ffl", "smartpromoter", "monitoridocs", "monitori"] },
-    { label: "React / Next.js", projects: ["naja", "smartpromoter", "solarquake", "boxradio"] },
-    { label: "React Native / Expo", projects: ["ffl", "smartpromoter"] },
-    { label: "Vue 3", projects: ["monitori", "monitoridocs"] },
-    { label: "RAG & LLMs", projects: ["ffl", "smartpromoter", "naja"] },
-    { label: "Python", projects: ["smartpromoter", "ffl", "backing-tracks", "boxradio"] },
-    { label: "SQL Server", projects: ["naja", "monitori", "monitoridocs"] },
-    { label: "PostgreSQL", projects: ["ffl", "smartpromoter"] },
-    { label: "Azure", projects: ["monitori", "monitoridocs"] },
-    { label: "AWS", projects: ["naja"] },
-    { label: "Clean Architecture / CQRS", projects: ["smartpromoter", "monitori", "monitoridocs"] },
-    { label: "GPU / PyTorch", projects: ["backing-tracks"] },
-    { label: "Audio DSP", projects: ["backing-tracks", "boxradio"] },
-    { label: "Tauri (Rust)", projects: ["boxradio"] },
-    { label: "Local voice AI", projects: ["boxradio"] },
-    { label: "Public science APIs", projects: ["solarquake"] },
-  ],
+  techs: techUsage.map((t) => ({ ...t, projects: t.uses.map((u) => u.project) })),
 };
 
 export const skills = [
