@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import BrainGraph from "@/components/BrainGraph";
 import Reveal from "@/components/Reveal";
 import {
   about,
@@ -193,20 +194,12 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <figure data-reveal className="mt-4 overflow-hidden rounded-xl border border-line bg-[#1b1b1b]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={brainGraph.src}
-              alt="Graph of a project knowledge vault with hundreds of linked notes"
-              loading="lazy"
-              width={1060}
-              height={950}
-              className="mx-auto max-h-[560px] w-auto"
-            />
-            <figcaption className="border-t border-line bg-surface px-5 py-3 text-sm text-muted">
-              {brainGraph.caption}
-            </figcaption>
-          </figure>
+          <BrainGraph
+            projects={showcase}
+            techs={brainGraph.techs}
+            hubHref={aiEngineering.repo.url}
+            caption={brainGraph.caption}
+          />
           <a
             href={aiEngineering.repo.url}
             target="_blank"
