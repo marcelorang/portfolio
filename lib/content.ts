@@ -114,10 +114,10 @@ export const experience = {
 
 export const sideProjects: Project[] = [
   {
-    name: "Live show backing-track pipeline",
-    kind: "Audio · GPU",
+    name: "Live VS: live show backing-track pipeline",
+    kind: "AI custom studio · audio · GPU",
     period: "2026",
-    text: "Automated backing tracks for a two-hour live tribute show: 58 songs separated into stems on GPU, beat tracking with an adaptive click grid, a spoken cue track, guitar tuning detection and ready-to-play REAPER projects for in-ear monitoring.",
+    text: "A personal AI studio that turns a setlist into live-ready backing tracks (VS): 58 songs separated into stems on GPU, beat tracking with an adaptive click grid, a spoken cue track, guitar tuning detection and ready-to-play REAPER projects for in-ear monitoring.",
     stack: ["Python", "PyTorch (CUDA)", "Demucs", "BS-Roformer", "beat_this", "Edge TTS", "librosa"],
   },
   {
@@ -129,20 +129,6 @@ export const sideProjects: Project[] = [
     link: { label: "acc-telemetry.pages.dev", url: "https://acc-telemetry.pages.dev/" },
   },
   {
-    name: "ScoreFlow",
-    kind: "Web · music",
-    period: "2026",
-    text: "Web sheet-music editor: optical music recognition, MIDI playback with a synced cursor and MusicXML export.",
-    stack: ["Next.js", "Zustand", "Verovio (WASM)", "Tone.js", "Supabase"],
-  },
-  {
-    name: "Zordon AI",
-    kind: "Voice assistant",
-    period: "2026",
-    text: "Personal voice assistant with a 3D avatar, streaming answers and speech in and out.",
-    stack: ["FastAPI", "Claude API", "ElevenLabs", "Whisper", "Next.js", "Three.js"],
-  },
-  {
     name: "AI media pipelines",
     kind: "Audio · video",
     period: "2025",
@@ -150,6 +136,153 @@ export const sideProjects: Project[] = [
     stack: ["faster-whisper", "MDX-Net", "Demucs", "Gemini", "PySceneDetect", "MoviePy"],
   },
 ];
+
+export type ShowcaseShot = { src: string; caption: string; mobile?: boolean };
+export type ShowcaseProject = {
+  slug: string;
+  group: "client" | "personal";
+  name: string;
+  kind: string;
+  tag?: string;
+  text?: string;
+  link?: { label: string; url: string };
+  shots: ShowcaseShot[];
+};
+
+// Screenshots of the products, captured locally with demo data. Filled in from /public/projects/<slug>/.
+const shot = (slug: string, file: string, caption: string, mobile = false): ShowcaseShot => ({
+  src: `/projects/${slug}/${file}.webp`,
+  caption,
+  mobile,
+});
+
+export const showcase: ShowcaseProject[] = [
+  {
+    slug: "naja",
+    group: "client",
+    name: "Naja",
+    kind: "Healthcare management SaaS",
+    tag: "Next.js · TypeScript · .NET 10 · AWS",
+    text: "Clinic and diagnostic-imaging platform: patient flow, radiology worklists, a rich-text medical report editor and electronic health records.",
+    shots: [
+      shot("naja", "01-painel-clinico", "Clinical panel: today's patients grouped by status, with insurance, arrival and waiting time."),
+      shot("naja", "03-editor-de-laudo", "Medical report editor (Tiptap) with templates, AI assistance and e-signature."),
+      shot("naja", "02-lista-de-trabalho", "Radiology worklist: exams, report status, age flags and actions per patient."),
+      shot("naja", "04-prontuario-eletronico", "Electronic health record: allergies, critical notes and the visit timeline."),
+      shot("naja", "05-login", "Branded sign-in."),
+    ],
+  },
+  {
+    slug: "ffl",
+    group: "client",
+    name: "Daily Flight Deck (FFL)",
+    kind: "Airline pilot training app",
+    tag: "React Native · .NET 10 · RAG",
+    text: "Daily scenario-based training for A320 pilots. Scenarios and questions come from a RAG pipeline over aircraft manuals; the app tracks how current each pilot is on every aircraft system.",
+    shots: [
+      shot("ffl", "01-home", "Home recommends the pilot's next training scenario.", true),
+      shot("ffl", "02-scenario-briefing", "Scenario briefing: an electrical emergency with the mission overview.", true),
+      shot("ffl", "03-question", "Multiple-choice question inside the scenario.", true),
+      shot("ffl", "04-answer-feedback", "Instant feedback explaining why the answer is correct.", true),
+      shot("ffl", "05-recency-radar", "Recency radar: how current the pilot is on each A320 system chapter.", true),
+    ],
+  },
+  {
+    slug: "smartpromoter",
+    group: "client",
+    name: "SmartPromoter",
+    kind: "Retail execution platform",
+    tag: "Next.js · Expo · .NET 10 CQRS · LLM OCR",
+    text: "Back office and offline-first field app for retail promoters: store visits, shelf photos, stock readings via LLM-based OCR and out-of-stock forecasting.",
+    shots: [
+      shot("smartpromoter", "01-dashboard", "Operations dashboard: daily visit KPIs, stock-outs and planned vs. done per week."),
+      shot("smartpromoter", "02-visao-estrategica", "Strategic view with restock suggestions and stock-out forecast per shelf."),
+      shot("smartpromoter", "03-estoque", "Stock by store and product, with days of cover and a suggested order."),
+      shot("smartpromoter", "04-alertas-integridade", "Integrity alerts for suspicious captures: spoofed GPS, far from store, repeated readings."),
+      shot("smartpromoter", "05-pendencias", "Review queue for OCR stock readings awaiting a decision."),
+      shot("smartpromoter-app", "02-atendimentos-do-dia", "Field app: today's store visits with status and navigation.", true),
+      shot("smartpromoter-app", "03-atendimento-fotos", "Field app: before/after shelf photos captured during a visit.", true),
+    ],
+  },
+  {
+    slug: "monitoridocs",
+    group: "client",
+    name: "MonitoriDocs",
+    kind: "Document & workflow platform",
+    tag: "Vue 3 · .NET 10 · workflow engine",
+    text: "Document workflows for real-estate project finance: stages with deadlines, per-document approvals, waivers and a full audit trail.",
+    shots: [
+      shot("monitoridocs", "03-workflow-board", "Workflow board: stages, deadlines and per-document approval status, including a waiver."),
+      shot("monitoridocs", "01-home-priorities", "Priorities home: each project's pending items and progress."),
+      shot("monitoridocs", "02-projects-list", "Projects with on-time / attention / late status."),
+      shot("monitoridocs", "04-document-history", "Document history: upload, review and waiver timeline."),
+      shot("monitoridocs", "05-documents-table", "All documents across workflows, filtered to late items."),
+    ],
+  },
+  {
+    slug: "monitori",
+    group: "client",
+    name: "Monitori",
+    kind: "Construction monitoring portal",
+    tag: "Vue 3 · .NET 9 · Clean Architecture",
+    text: "Client portal for construction and financial monitoring of real-estate projects, with monthly reports per contracted service.",
+    shots: [
+      shot("monitori", "02-home-dashboard", "Client home: latest reports by service and recently viewed projects."),
+      shot("monitori", "04-project-detail", "Project page with contracted and available monitoring services."),
+      shot("monitori", "03-projects-list", "Project list with filters by type, developer, investor and state."),
+      shot("monitori", "05-report-viewer", "Built-in PDF report viewer with a reference-month picker."),
+      shot("monitori", "01-login", "Branded sign-in."),
+    ],
+  },
+  {
+    slug: "boxradio",
+    group: "personal",
+    name: "BoxRadio",
+    kind: "AI race engineer for sim racing",
+    tag: "Tauri (Rust) · React · local voice AI",
+    text: "In-game overlays plus a voice race engineer for Assetto Corsa Competizione, running fully on the user's PC.",
+    link: { label: "Visit the BoxRadio site", url: "https://acc-telemetry.pages.dev/" },
+    shots: [
+      shot("boxradio", "01-race-hud", "In-race HUD: sector timing, weather, tyres, inputs, fuel, brake bias and brake temps."),
+      shot("boxradio", "02-edit-mode-settings", "Edit mode: drag widgets anywhere and tune them in the settings panel."),
+      shot("boxradio", "04-landing-hero", "Landing page: \"Your race engineer, on the radio.\""),
+      shot("boxradio", "05-landing-voice-engineer", "Sample radio exchanges between driver and AI engineer."),
+    ],
+  },
+  {
+    slug: "backing-tracks",
+    group: "personal",
+    name: "Live VS",
+    kind: "AI custom studio for live shows",
+    tag: "Python · PyTorch (CUDA) · REAPER",
+    text: "Turns a setlist into live-ready backing tracks: stems separated on GPU, adaptive click, spoken cues and tuning detection, delivered as REAPER sessions.",
+    shots: [
+      shot("backing-tracks", "01-reaper-project", "A generated REAPER session: click, spoken cues, GPU-separated stems and section markers."),
+      shot("backing-tracks", "02-click-grid-zoom", "Adaptive click grid: beat-tracked tempo changes bar by bar, cues right before each section."),
+      shot("backing-tracks", "03-tuning-detection", "Tuning detection across the 58-track set: offset from A=440 and lowest guitar note."),
+    ],
+  },
+  {
+    slug: "solarquake",
+    group: "personal",
+    name: "SolarQuake",
+    kind: "Solar activity × seismic events",
+    tag: "Next.js · NASA / NOAA / USGS data",
+    text: "Real-time dashboard that puts solar flares, geomagnetic storms and earthquakes on one timeline.",
+    shots: [
+      shot("solarquake", "02-summary-dashboard", "Daily summary: quake counts, largest event, most active regions."),
+      shot("solarquake", "03-live-quake-map", "Live map of M4+ earthquakes with a per-event detail sheet."),
+      shot("solarquake", "05-solar-monitor", "Solar monitor: NASA SDO imagery, X-ray class, active regions and CMEs."),
+      shot("solarquake", "01-landing-hero", "Landing page."),
+    ],
+  },
+];
+
+export const brainGraph = {
+  src: "/projects/brain/01-project-brain-graph.webp",
+  caption:
+    "A real project brain in Obsidian: 771 notes and 3,500+ links between requirements, ADRs, guides and session logs, the context people and AI agents work from.",
+};
 
 export const skills = [
   { group: "Back end", items: ["C#", ".NET 8/9/10", "ASP.NET Core", "EF Core", "Dapper", "MediatR / CQRS", "SignalR", "Hangfire", "Python", "FastAPI", "Node.js"] },

@@ -3,9 +3,11 @@ import Reveal from "@/components/Reveal";
 import {
   about,
   aiEngineering,
+  brainGraph,
   education,
   experience,
   profile,
+  showcase,
   sideProjects,
   skills,
   stats,
@@ -16,6 +18,7 @@ const nav = [
   { href: "#ai", label: "How I work" },
   { href: "#about", label: "About" },
   { href: "#experience", label: "Experience" },
+  { href: "/work", label: "Work" },
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
 ];
@@ -190,6 +193,20 @@ export default function Home() {
               </div>
             ))}
           </div>
+          <figure data-reveal className="mt-4 overflow-hidden rounded-xl border border-line bg-[#1b1b1b]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={brainGraph.src}
+              alt="Graph of a project knowledge vault with hundreds of linked notes"
+              loading="lazy"
+              width={1060}
+              height={950}
+              className="mx-auto max-h-[560px] w-auto"
+            />
+            <figcaption className="border-t border-line bg-surface px-5 py-3 text-sm text-muted">
+              {brainGraph.caption}
+            </figcaption>
+          </figure>
           <a
             href={aiEngineering.repo.url}
             target="_blank"
@@ -249,6 +266,53 @@ export default function Home() {
             ))}
           </ol>
         </section>
+
+        {/* Showcase */}
+        {showcase.length > 0 && (
+          <section className="border-t border-line py-16">
+            <SectionTitle id="showcase" kicker="Work" title="Selected work, on screen" />
+            <p data-reveal className="mb-8 max-w-3xl text-sm text-muted">
+              {showcase.length} products, {showcase.reduce((n, p) => n + p.shots.length, 0)} screens from client
+              platforms and personal projects, captured from local builds with demo data.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
+              {showcase.slice(0, 4).map((p, i) => {
+                const s = p.shots.find((x) => !x.mobile) ?? p.shots[0];
+                return (
+                  <a
+                    key={p.slug}
+                    href={`/work#${p.slug}`}
+                    data-reveal
+                    style={delay(i * 100)}
+                    className="lift group overflow-hidden rounded-xl border border-line bg-surface hover:border-accent/60"
+                  >
+                    <div className="aspect-[16/10] overflow-hidden bg-chip">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={s.src}
+                        alt={s.caption}
+                        loading="lazy"
+                        className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${
+                          s.mobile ? "object-contain" : "object-cover object-top"
+                        }`}
+                      />
+                    </div>
+                    <p className="px-3 py-2 text-sm font-medium">
+                      {p.name} <span className="block text-xs font-normal text-muted">{p.kind}</span>
+                    </p>
+                  </a>
+                );
+              })}
+            </div>
+            <a
+              href="/work"
+              data-reveal
+              className="mt-6 inline-flex items-center gap-2 rounded-md bg-text px-4 py-2 text-sm font-medium text-bg transition-transform hover:-translate-y-0.5"
+            >
+              See all projects on screen →
+            </a>
+          </section>
+        )}
 
         {/* Side projects */}
         <section className="border-t border-line py-16">
