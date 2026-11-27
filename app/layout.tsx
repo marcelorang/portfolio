@@ -6,6 +6,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono-face" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://marcelorangel.pages.dev"),
   title: "Marcelo Rangel — Full Stack Software Engineer",
   description:
     "Full stack software engineer focused on .NET/C#, AI/RAG, React/Next.js and React Native. Remote from Brazil.",
@@ -13,7 +14,11 @@ export const metadata: Metadata = {
     title: "Marcelo Rangel — Full Stack Software Engineer",
     description: ".NET/C# · AI/RAG · React/Next.js · React Native. Remote from Brazil.",
     type: "website",
+    url: "/",
+    siteName: "Marcelo Rangel",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Marcelo Rangel — Full Stack Software Engineer" }],
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
