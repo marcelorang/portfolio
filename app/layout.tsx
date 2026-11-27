@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono-face" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://marcelorangel.pages.dev"),
+  metadataBase: new URL("https://marcelorangel.dev"),
   title: "Marcelo Rangel — Full Stack Software Engineer",
   description:
     "Full stack software engineer focused on .NET/C#, AI/RAG, React/Next.js and React Native. Remote from Brazil.",
