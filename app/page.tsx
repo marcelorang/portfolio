@@ -109,7 +109,7 @@ export default function Home() {
 
       <main id="top" className="mx-auto max-w-5xl px-4 sm:px-6">
         {/* Hero */}
-        <section className="relative grid items-center gap-10 py-16 sm:py-24 md:grid-cols-[1fr_280px]">
+        <section className="relative grid items-center gap-10 py-16 sm:py-24 md:grid-cols-[1fr_220px]">
           <div className="hero-bg" aria-hidden />
           <div className="order-2 md:order-1">
             <p className="enter font-mono text-sm text-muted" style={delay(0)}>
@@ -162,15 +162,17 @@ export default function Home() {
             </dl>
           </div>
           <div className="enter order-1 md:order-2" style={delay(250)}>
-            <div className="photo-glow mx-auto w-40 sm:w-52 md:w-full">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={profile.photo}
-                alt={`Portrait of ${profile.name}`}
-                width={720}
-                height={900}
-                className="w-full object-cover"
-              />
+            <div className="photo-glow mx-auto w-40 sm:w-48 md:w-full">
+              <div className="overflow-hidden rounded-[calc(1.1rem-2px)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={profile.photo}
+                  alt={`Portrait of ${profile.name}`}
+                  width={720}
+                  height={900}
+                  className="aspect-[6/5] w-full origin-[50%_8%] scale-[1.4] object-cover object-[50%_0%]"
+                />
+              </div>
             </div>
           </div>
         </section>
